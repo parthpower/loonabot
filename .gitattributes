@@ -1,4 +1,1 @@
-haseul.mp4 filter=lfs diff=lfs merge=lfs -text
-imcat.mp4 filter=lfs diff=lfs merge=lfs -text
-kimlip.mp4 filter=lfs diff=lfs merge=lfs -text
-welcometoloona.mp4 filter=lfs diff=lfs merge=lfs -text
+*.mp4 filter=lfs diff=lfs merge=lfs -text
