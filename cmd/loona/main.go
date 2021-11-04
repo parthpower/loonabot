@@ -63,7 +63,7 @@ func (l *Loona) handler(msg *gateway.MessageCreateEvent) {
 	m.do(m.matchSimpleRegex("hyunjin"), m.actionSendFileMsg("i am little meow meow", static.ImCat))
 	m.do(m.matchSimpleRegex("kim lip"), m.actionSendFileMsg("KIMBERLY LIPPINGTON!", static.KimLip))
 	m.do(m.matchSimpleRegex("i love loona"), m.actionSendMsg("https://www.youtube.com/watch?v=Jw_7hfGpYbo"))
-	m.do(m.matchSimpleRegex("apple"), m.actionSendMsg("fuck apple", "https://cdn.discordapp.com/attachments/894314687141904467/903765866192175145/MV___LOONAYves_new_1.gif"))
+	m.do(m.matchSimpleRegex("apple"), m.actionSendMsg("fuck apple", "https://gfycat.com/bowedmammothcrocodile"))
 	m.do(m.matchPrefix(".yt"), m.actionYTSearch())
 	m.do(m.matchPrefix(".translate"), m.actionTranslate())
 }
