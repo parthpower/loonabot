@@ -64,6 +64,7 @@ func (l *Loona) handler(msg *gateway.MessageCreateEvent) {
 	m.do(m.matchSimpleRegex("kim lip"), m.actionSendFileMsg("KIMBERLY LIPPINGTON!", static.KimLip))
 	m.do(m.matchSimpleRegex("i love loona"), m.actionSendMsg("https://www.youtube.com/watch?v=Jw_7hfGpYbo"))
 	m.do(m.matchSimpleRegex("apple"), m.actionSendMsg("fuck apple", "https://gfycat.com/bowedmammothcrocodile"))
+	m.do(m.matchSimpleRegex("chuu"), m.actionSendMsgNoTTS("https://gfycat.com/honestweirddromaeosaur"))
 	m.do(m.matchPrefix(".yt"), m.actionYTSearch())
 	m.do(m.matchPrefix(".translate"), m.actionTranslate())
 }
@@ -90,6 +91,21 @@ func (m *discordmsg) matchSimpleRegex(match string) func() bool {
 			return true
 		}
 		return false
+	}
+}
+
+func (m *discordmsg) actionSendMsgNoTTS(messages ...string) func() error {
+	return func() error {
+		var err error
+		for _, msg := range messages {
+			_, e := m.Loona.Session.SendMessageComplex(m.ChannelID, api.SendMessageData{
+				Content: msg,
+			})
+			if e != nil {
+				err = multierror.Append(err, e)
+			}
+		}
+		return err
 	}
 }
 
