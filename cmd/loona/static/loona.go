@@ -24,6 +24,10 @@ func Haseul() (fs.File, error) {
 	return File("haseul.mp4")
 }
 
+func Heejin() (fs.File, error) {
+	return File("heejin.mp4")
+}
+
 func File(name string) (fs.File, error) {
 	return f.Open(name)
 }
