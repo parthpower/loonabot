@@ -67,6 +67,8 @@ func (l *Loona) handler(msg *gateway.MessageCreateEvent) {
 	m.do(m.matchSimpleRegex("chuu"), m.actionSendMsg("ten knee sue "))
 	m.do(m.matchSimpleRegex("chuu"), m.actionSendMsgNoTTS("https://gfycat.com/honestweirddromaeosaur"))
 	m.do(m.matchSimpleRegex("heejin"), m.actionSendFileMsg("jay map elle heejin", static.Heejin))
+	m.do(m.matchSimpleRegex("aeong"), m.actionSendMsg("aeong"))
+	m.do(m.matchSimpleRegex("aeong"), m.actionSendMsgNoTTS("https://gfycat.com/innocentsphericalarrowworm"))
 	m.do(m.matchPrefix(".yt"), m.actionYTSearch())
 	m.do(m.matchPrefix(".translate"), m.actionTranslate())
 }
