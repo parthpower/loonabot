@@ -1,31 +1,29 @@
+//go:build !goinstaexport
+
 // Package main
 // loona discord bot
 package main
 
 import (
 	"context"
-	"io/ioutil"
 	"os"
-	"regexp"
 
 	"github.com/parthpower/loonabot/cmd/loona"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	godotenv.Load(".env")
 	token := os.Getenv("DISCORD_TOKEN")
+	instacookies := os.Getenv("INSTA_COOKIES")
 	if token == "" {
-		r, err := ioutil.ReadFile(".env")
-		if err != nil {
-			panic(err)
-		}
-		re := regexp.MustCompile(`DISCORD_TOKEN=(.*)`)
-		m := re.FindSubmatch(r)
-		if len(m) < 2 {
-			panic(".env file doesn't have DISCORD_TOKEN")
-		}
-		token = string(m[1])
+		panic(".env file doesn't have DISCORD_TOKEN")
 	}
-	l, err := loona.NewBot(token)
+	if instacookies == "" {
+		panic(".env file doesn't have INSTA_COOKIES")
+	}
+	l, err := loona.NewBot(token, instacookies)
 	if err != nil {
 		panic(err)
 	}
