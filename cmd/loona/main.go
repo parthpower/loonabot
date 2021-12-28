@@ -229,6 +229,7 @@ func (m *discordmsg) actionSendInstagramContent() func() error {
 					urls = append(urls, med.URL)
 				}
 			}
+			logrus.Info("instagram urls: %v", urls)
 			f, closer, err := getSendPartFile(urls...)
 			if err != nil || f == nil || len(f) == 0 || closer == nil {
 				logrus.Error("failed getSendPartFile: " + err.Error())
