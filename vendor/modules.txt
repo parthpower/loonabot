@@ -1,0 +1,79 @@
+# github.com/bregydoc/gtranslate v0.0.0-20200913051839-1bd07f6c1fc5
+## explicit
+github.com/bregydoc/gtranslate
+# github.com/buger/jsonparser v1.1.1
+## explicit; go 1.13
+github.com/buger/jsonparser
+# github.com/diamondburned/arikawa/v3 v3.0.0-rc.2
+## explicit; go 1.13
+github.com/diamondburned/arikawa/v3/api
+github.com/diamondburned/arikawa/v3/api/rate
+github.com/diamondburned/arikawa/v3/discord
+github.com/diamondburned/arikawa/v3/gateway
+github.com/diamondburned/arikawa/v3/gateway/shard
+github.com/diamondburned/arikawa/v3/internal/backoff
+github.com/diamondburned/arikawa/v3/internal/handleloop
+github.com/diamondburned/arikawa/v3/internal/heart
+github.com/diamondburned/arikawa/v3/internal/intmath
+github.com/diamondburned/arikawa/v3/internal/moreatomic
+github.com/diamondburned/arikawa/v3/internal/moreatomic/syncmod
+github.com/diamondburned/arikawa/v3/session
+github.com/diamondburned/arikawa/v3/utils/handler
+github.com/diamondburned/arikawa/v3/utils/httputil
+github.com/diamondburned/arikawa/v3/utils/httputil/httpdriver
+github.com/diamondburned/arikawa/v3/utils/json
+github.com/diamondburned/arikawa/v3/utils/json/enum
+github.com/diamondburned/arikawa/v3/utils/json/option
+github.com/diamondburned/arikawa/v3/utils/sendpart
+github.com/diamondburned/arikawa/v3/utils/wsutil
+# github.com/gorilla/schema v1.2.0
+## explicit
+github.com/gorilla/schema
+# github.com/gorilla/websocket v1.4.2
+## explicit; go 1.12
+github.com/gorilla/websocket
+# github.com/hashicorp/errwrap v1.0.0
+## explicit
+github.com/hashicorp/errwrap
+# github.com/hashicorp/go-multierror v1.1.1
+## explicit; go 1.13
+github.com/hashicorp/go-multierror
+# github.com/joho/godotenv v1.4.0
+## explicit; go 1.12
+github.com/joho/godotenv
+# github.com/pkg/errors v0.9.1
+## explicit
+github.com/pkg/errors
+# github.com/robertkrimen/otto v0.0.0-20211024170158-b87d35c0b86f
+## explicit; go 1.14
+github.com/robertkrimen/otto
+github.com/robertkrimen/otto/ast
+github.com/robertkrimen/otto/dbg
+github.com/robertkrimen/otto/file
+github.com/robertkrimen/otto/parser
+github.com/robertkrimen/otto/registry
+github.com/robertkrimen/otto/token
+# github.com/rubenvdham/instagram-go-scraper/instagram v0.0.0-20210316102837-67e14b5d136f
+## explicit; go 1.16
+github.com/rubenvdham/instagram-go-scraper/instagram
+# github.com/sirupsen/logrus v1.8.1
+## explicit; go 1.13
+github.com/sirupsen/logrus
+# golang.org/x/sys v0.0.0-20210423082822-04245dca01da
+## explicit; go 1.12
+golang.org/x/sys/internal/unsafeheader
+golang.org/x/sys/unix
+golang.org/x/sys/windows
+# golang.org/x/text v0.3.6
+## explicit; go 1.11
+golang.org/x/text/internal/language
+golang.org/x/text/internal/language/compact
+golang.org/x/text/internal/tag
+golang.org/x/text/language
+# golang.org/x/time v0.0.0-20200630173020-3af7569d3a1e
+## explicit
+golang.org/x/time/rate
+# gopkg.in/sourcemap.v1 v1.0.5
+## explicit
+gopkg.in/sourcemap.v1
+gopkg.in/sourcemap.v1/base64vlq
