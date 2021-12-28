@@ -5,12 +5,16 @@ package loona
 import (
 	"context"
 	"fmt"
+	"io"
 	"io/fs"
+	"net/http"
 	"regexp"
 	"strings"
 
 	"github.com/parthpower/loonabot/cmd/loona/static"
+	"github.com/parthpower/loonabot/pkg/insta"
 	"github.com/parthpower/loonabot/pkg/myscraper"
+	"github.com/rubenvdham/instagram-go-scraper/instagram"
 
 	"github.com/bregydoc/gtranslate"
 	"github.com/diamondburned/arikawa/v3/api"
@@ -23,21 +27,24 @@ import (
 )
 
 type Loona struct {
-	Session *session.Session
+	Session     *session.Session
+	InstaCookie string
 }
 
 type discordmsg struct {
 	*gateway.MessageCreateEvent
 	*Loona
-	extraArgs []string
+	// TODO: get better way to pass info from match to action
+	// this isn't thread safe
+	extraArgs interface{}
 }
 
-func NewBot(token string) (*Loona, error) {
+func NewBot(token string, instacookie string) (*Loona, error) {
 	s, err := session.New("Bot " + token)
 	if err != nil {
 		return nil, err
 	}
-	l := &Loona{Session: s}
+	l := &Loona{Session: s, InstaCookie: instacookie}
 	l.Session.AddIntents(gateway.IntentGuildMessages)
 	l.Session.AddHandler(l.handler)
 	return l, nil
@@ -71,6 +78,24 @@ func (l *Loona) handler(msg *gateway.MessageCreateEvent) {
 	m.do(m.matchSimpleRegex("aeong"), m.actionSendMsgNoTTS("https://gfycat.com/innocentsphericalarrowworm"))
 	m.do(m.matchPrefix(".yt"), m.actionYTSearch())
 	m.do(m.matchPrefix(".translate"), m.actionTranslate())
+	m.do(m.matchInstagramURL(), m.actionSendInstagramContent())
+}
+
+func (m *discordmsg) matchInstagramURL() func() bool {
+	return func() bool {
+		re := regexp.MustCompile(`https?:\/\/(?:www\.)?instagram\.com\/(:?.*\/)?(:?tv|p|reel)\/([A-Za-z0-9_-]+)`)
+
+		matches := re.FindAllStringSubmatch(m.Content, -1)
+		if len(matches) < 1 {
+			return false
+		}
+		for _, match := range matches {
+			if len(match) > 1 {
+				m.extraArgs = append(m.extraArgs.([]string), match[0])
+			}
+		}
+		return len(m.extraArgs.([]string)) > 0
+	}
 }
 
 func (m *discordmsg) matchPrefix(prefix string) func() bool {
@@ -80,7 +105,7 @@ func (m *discordmsg) matchPrefix(prefix string) func() bool {
 		if len(matches) < 2 {
 			return false
 		}
-		m.extraArgs = append(m.extraArgs, matches[1])
+		m.extraArgs = []string{matches[1]}
 		return true
 	}
 }
@@ -149,10 +174,10 @@ func (m *discordmsg) actionSendFileMsg(msg string, fileFn func() (fs.File, error
 
 func (m *discordmsg) actionYTSearch() func() error {
 	return func() error {
-		if m.extraArgs == nil || len(m.extraArgs) < 1 {
+		if m.extraArgs == nil || len(m.extraArgs.([]string)) < 1 {
 			return fmt.Errorf("m.extraArgs not populated")
 		}
-		term := m.extraArgs[0]
+		term := m.extraArgs.([]string)[0]
 		results, err := myscraper.Search(term)
 		if err != nil {
 			return err
@@ -172,10 +197,10 @@ func (m *discordmsg) actionYTSearch() func() error {
 
 func (m *discordmsg) actionTranslate() func() error {
 	return func() error {
-		if m.extraArgs == nil || len(m.extraArgs) < 1 {
+		if m.extraArgs == nil || len(m.extraArgs.([]string)) < 1 {
 			return fmt.Errorf("m.extraArgs not populated")
 		}
-		translated, err := gtranslate.TranslateWithParams(m.extraArgs[0], gtranslate.TranslationParams{
+		translated, err := gtranslate.TranslateWithParams(m.extraArgs.([]string)[0], gtranslate.TranslationParams{
 			From: "auto",
 			To:   "en",
 		})
@@ -183,6 +208,99 @@ func (m *discordmsg) actionTranslate() func() error {
 			return err
 		}
 		_, err = m.Session.SendMessage(m.ChannelID, translated)
+		return err
+	}
+}
+
+func (m *discordmsg) actionSendInstagramContent() func() error {
+	return func() error {
+		for _, u := range m.extraArgs.([]string) {
+			media, err := insta.GetMediaFromUrl(u, m.InstaCookie)
+			if err != nil {
+				logrus.Error("GetPostByUrl: %v", err)
+				continue
+			}
+			urls := []string{}
+			if media.Type == instagram.TypeImage || media.Type == instagram.TypeVideo {
+				urls = append(urls, media.MediaURL)
+			}
+			if media.Type == instagram.TypeCarousel {
+				for _, med := range media.MediaList {
+					urls = append(urls, med.URL)
+				}
+			}
+			f, closer, err := getSendPartFile(urls...)
+			if err != nil || f == nil || len(f) == 0 || closer == nil {
+				logrus.Error("failed getSendPartFile: " + err.Error())
+				continue
+			}
+			defer closer()
+			_, err = m.Loona.Session.SendMessageComplex(m.ChannelID, api.SendMessageData{
+				Content: media.Caption,
+				Files:   f,
+			})
+			if err != nil {
+				logrus.Error("failed to send msg: " + err.Error())
+			}
+		}
+		return nil
+	}
+}
+
+func getSendPartFile(urls ...string) ([]sendpart.File, func(), error) {
+	if len(urls) < 1 {
+		return nil, nil, fmt.Errorf("empty urls")
+	}
+	f := []sendpart.File{}
+	re := regexp.MustCompile(`\.mp4`)
+	pipes := []io.ReadCloser{}
+	for _, url := range urls {
+		resp, err := http.Get(url)
+		if err != nil {
+			logrus.Error("failed to fetch: " + url + " error: " + err.Error())
+			continue
+		}
+		// defer resp.Body.Close()
+		pipes = append(pipes, resp.Body)
+		isMp4 := re.MatchString(url)
+		name := "img.jpg"
+		if isMp4 {
+			name = "vid.mp4"
+		}
+		f = append(f, sendpart.File{Reader: resp.Body, Name: name})
+	}
+	closer := func() {
+		for _, i := range pipes {
+			i.Close()
+		}
+	}
+	return f, closer, nil
+}
+
+func (m *discordmsg) actionDownloadTempFile(urls ...string) func() error {
+	return func() error {
+		if len(urls) < 1 {
+			return nil
+		}
+		f := []sendpart.File{}
+		re := regexp.MustCompile(`\.mp4`)
+		for _, url := range urls {
+			resp, err := http.Get(url)
+			if err != nil {
+				return nil
+			}
+			defer resp.Body.Close()
+			isMp4 := re.MatchString(url)
+			name := "img.jpg"
+			if isMp4 {
+				name = "vid.mp4"
+			}
+			f = append(f, sendpart.File{Reader: resp.Body, Name: name})
+		}
+		_, err := m.Loona.Session.SendMessageComplex(m.ChannelID, api.SendMessageData{
+			Content: "um",
+			Files:   f,
+		})
 		return err
 	}
 }
