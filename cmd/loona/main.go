@@ -78,7 +78,7 @@ func (l *Loona) handler(msg *gateway.MessageCreateEvent) {
 	m.do(m.matchSimpleRegex("aeong"), m.actionSendMsg("aeong"))
 	m.do(m.matchSimpleRegex("aeong"), m.actionSendMsgNoTTS("https://gfycat.com/innocentsphericalarrowworm"))
 	m.do(m.matchSimpleRegex("vivi"), m.actionSendMsg("jinjah moosaw, yeah baw may"))
-	m.do(m.matchSimpleRegex("vivi"), m.actionSendMsgNoTTS("https://gifs.com/embed/thatissoscaryinthemiddleofthenight-Eq1Xnk"))
+	m.do(m.matchSimpleRegex("vivi"), m.actionSendMsgNoTTS("https://gfycat.com/decimalunimportantbeaver"))
 	m.do(m.matchPrefix(".yt"), m.actionYTSearch())
 	m.do(m.matchPrefix(".translate"), m.actionTranslate())
 	m.do(m.matchInstagramURL(), m.actionSendInstagramContent())
