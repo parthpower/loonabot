@@ -14,7 +14,6 @@ import (
 	"github.com/parthpower/loonabot/cmd/loona/static"
 	"github.com/parthpower/loonabot/pkg/insta"
 	"github.com/parthpower/loonabot/pkg/myscraper"
-	"github.com/rubenvdham/instagram-go-scraper/instagram"
 
 	"github.com/bregydoc/gtranslate"
 	"github.com/diamondburned/arikawa/v3/api"
@@ -220,19 +219,11 @@ func (m *discordmsg) actionSendInstagramContent() func() error {
 		for _, u := range m.extraArgs.([]string) {
 			media, err := insta.GetMediaFromUrl(u, m.InstaCookie)
 			if err != nil {
-				logrus.Error("GetPostByUrl: %v", err)
+				logrus.Errorf("GetPostByUrl: %v", err)
 				continue
 			}
-			urls := []string{}
-			if media.Type == instagram.TypeImage || media.Type == instagram.TypeVideo {
-				urls = append(urls, media.MediaURL)
-			}
-			if media.Type == instagram.TypeCarousel {
-				for _, med := range media.MediaList {
-					urls = append(urls, med.URL)
-				}
-			}
-			logrus.Info("instagram urls: %v", urls)
+			urls := media.DownloadURL
+			logrus.Infof("instagram urls: %v", urls)
 			f, closer, err := getSendPartFile(urls...)
 			if err != nil || f == nil || len(f) == 0 || closer == nil {
 				logrus.Error("failed getSendPartFile: " + err.Error())

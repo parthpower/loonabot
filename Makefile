@@ -11,6 +11,10 @@ loonabot: $(GO_SRC)
 ig: $(GO_SRC)
 	CGO_ENABLED=0 $(GO) build -v $(GO_FLAGS) -o $@ ./cmd/ig
 
+.PHONY: test
+test:
+	CGO_ENABLED=0 $(GO) test
+
 .PHONY: clean
 deploy: loona
 	./deploy.sh
