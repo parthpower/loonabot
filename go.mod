@@ -8,7 +8,6 @@ require (
 	github.com/diamondburned/arikawa/v3 v3.0.0-rc.2
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/joho/godotenv v1.4.0
-	github.com/rubenvdham/instagram-go-scraper/instagram v0.0.0-20210316102837-67e14b5d136f
 	github.com/sirupsen/logrus v1.8.1
 )
 
