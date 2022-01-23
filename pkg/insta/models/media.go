@@ -61,7 +61,7 @@ func (i *Insta) DownloadURL() ([]string, error) {
 		}
 		// check cart media
 		for _, caritems := range item.CarouselMedia {
-			u, _ := getImageCandidate(&caritems.ImageVersions2, caritems.OriginalWidth, caritems.OriginalWidth)
+			u, _ := getImageCandidate(&caritems.ImageVersions2, caritems.OriginalWidth, caritems.OriginalHeight)
 			// error is fine because post may not have image
 			if u != "" {
 				urls = append(urls, u)
