@@ -10,6 +10,7 @@ var testjson []string
 
 func init() {
 	testjson = []string{
+		"issue.json",
 		"pic.json",
 		"vid.json",
 		"carouselpic.json",
