@@ -6,48 +6,28 @@ import (
 	"testing"
 )
 
-func TestMedia(t *testing.T) {
-	cookies := os.Getenv("INSTA_COOKIES")
-	if cookies == "" {
-		t.Log("Export INSTA_COOKIES env var to run this test")
-		t.SkipNow()
-	}
-	m, err := GetPostFromCode("CW8BdQlhono", cookies)
-	if err != nil {
-		t.Log(err)
-		t.Fail()
-	}
-	t.Log(m.MediaURL)
-}
-
-func TestReel(t *testing.T) {
-	cookies := os.Getenv("INSTA_COOKIES")
-	if cookies == "" {
-		t.Log("Export INSTA_COOKIES env var to run this test")
-		t.SkipNow()
-	}
-	m, err := GetReelFromCode("CX5-n1ylthH", cookies)
-	if err != nil {
-		t.Log(err)
-		t.Fail()
-	}
-	t.Log(m.MediaURL)
-	t.Log(m.Type)
-}
-
 func TestURL(t *testing.T) {
 	cookies := os.Getenv("INSTA_COOKIES")
 	if cookies == "" {
 		t.Log("Export INSTA_COOKIES env var to run this test")
 		t.SkipNow()
 	}
-	m, err := GetMediaFromUrl("https://www.instagram.com/tv/CYALWwdJ54u/?utm_medium=copy_link", cookies)
-	if err != nil {
-		t.Log(err)
-		t.Fail()
+	urls := []string{
+		"https://www.instagram.com/loonathedorm/reel/CX_mcNRAbx6/",
+		"https://www.instagram.com/tv/CYALWwdJ54u/?utm_medium=copy_link",
+		"https://www.instagram.com/p/CY1FWZ0J-ew/",
+		"https://www.instagram.com/p/CYLi2doLHVE/",
 	}
-	t.Log(m.MediaURL)
-	t.Log(m.Type)
+	for _, url := range urls {
+		m, err := GetMediaFromUrl(url, cookies)
+		if err != nil {
+			t.Logf("failed to get url %s", url)
+			t.Log(err)
+			t.Fail()
+		}
+		t.Log(m.Caption)
+		t.Log(m.DownloadURL)
+	}
 }
 
 func TestRegex(t *testing.T) {

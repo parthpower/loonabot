@@ -25,11 +25,9 @@ func main() {
 		panic(err)
 	}
 	fmt.Printf("Caption: %s\n", media.Caption)
-	if media.Type == insta.TypeCarousel {
-		for _, u := range media.MediaList {
-			fmt.Println(u.URL)
-		}
-	} else {
-		fmt.Println(media.MediaURL)
+
+	for _, u := range media.DownloadURL {
+		fmt.Println(u)
 	}
+
 }
