@@ -308,3 +308,9 @@ type Items struct {
 	ClipsMetadata                       ClipsMetadata          `json:"clips_metadata"`
 	MediaCroppingInfo                   MediaCroppingInfo      `json:"media_cropping_info"`
 }
+
+const (
+	MediaTypeImage    = 1
+	MediaTypeVideo    = 2
+	MediaTypeCarousel = 8
+)

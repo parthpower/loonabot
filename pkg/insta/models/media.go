@@ -49,30 +49,37 @@ func (i *Insta) DownloadURL() ([]string, error) {
 	}
 	urls := []string{}
 	for _, item := range i.Items {
-		// for single picture
-		u, _ := getImageCandidate(&item.ImageVersions2, item.OriginalWidth, item.OriginalHeight)
-		// error is fine because post may not have image
-		if u != "" {
-			urls = append(urls, u)
-		}
-		vidu, _ := getVideoCandidate(&item.VideoVersions, item.OriginalWidth, item.OriginalHeight)
-		if vidu != "" {
-			urls = append(urls, vidu)
-		}
-		// check cart media
-		for _, caritems := range item.CarouselMedia {
-			u, _ := getImageCandidate(&caritems.ImageVersions2, caritems.OriginalWidth, caritems.OriginalHeight)
+		switch item.MediaType {
+		case MediaTypeImage:
+			// for single picture
+			u, _ := getImageCandidate(&item.ImageVersions2, item.OriginalWidth, item.OriginalHeight)
 			// error is fine because post may not have image
 			if u != "" {
 				urls = append(urls, u)
 			}
-
-			// get videos
-			vidu, _ := getVideoCandidate(&caritems.VideoVersions, caritems.OriginalWidth, caritems.OriginalHeight)
+		case MediaTypeVideo:
+			vidu := getBestVideoCandidate(&item.VideoVersions)
 			if vidu != "" {
 				urls = append(urls, vidu)
 			}
-
+		case MediaTypeCarousel:
+			// check cart media
+			for _, caritems := range item.CarouselMedia {
+				switch caritems.MediaType {
+				case MediaTypeImage:
+					u, _ := getImageCandidate(&caritems.ImageVersions2, caritems.OriginalWidth, caritems.OriginalHeight)
+					// error is fine because post may not have image
+					if u != "" {
+						urls = append(urls, u)
+					}
+				case MediaTypeVideo:
+					// get videos
+					vidu := getBestVideoCandidate(&caritems.VideoVersions)
+					if vidu != "" {
+						urls = append(urls, vidu)
+					}
+				}
+			}
 		}
 	}
 	return urls, nil
@@ -88,11 +95,15 @@ func getImageCandidate(img *ImageVersions2, width, height int) (string, error) {
 	return "", fmt.Errorf("image not found with %dx%d", width, height)
 }
 
-func getVideoCandidate(vid *[]VideoVersions, width, height int) (string, error) {
+func getBestVideoCandidate(vid *[]VideoVersions) string {
+	bestres := 0
+	u := ""
 	for _, c := range *vid {
-		if c.Width == width && c.Height == height {
-			return c.URL, nil
+		res := c.Height * c.Width
+		if res > bestres {
+			bestres = res
+			u = c.URL
 		}
 	}
-	return "", fmt.Errorf("video not found with %dx%d", width, height)
+	return u
 }
