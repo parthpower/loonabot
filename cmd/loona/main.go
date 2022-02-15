@@ -79,7 +79,7 @@ func (l *Loona) handler(msg *gateway.MessageCreateEvent) {
 	m.do(m.matchSimpleRegex("aeong"), m.actionSendMsgNoTTS("https://gfycat.com/innocentsphericalarrowworm"))
 	m.do(m.matchSimpleRegex("vivi "), m.actionSendMsg("jinjah moosaw, yeah baw may"))
 	m.do(m.matchSimpleRegex("vivi "), m.actionSendMsgNoTTS("https://gfycat.com/decimalunimportantbeaver"))
-	m.do(m.matchSimpleRegex("go w.+on"), m.actionSendMsgNoTTS("https://cdn.discordapp.com/attachments/819626268726263828/941467694090321940/best_member.mp4"))
+	m.do(m.matchSimpleRegex("go ?wo+n"), m.actionSendMsgNoTTS("https://cdn.discordapp.com/attachments/819626268726263828/941467694090321940/best_member.mp4"))
 	m.do(m.matchPrefix(".yt"), m.actionYTSearch())
 	m.do(m.matchPrefix(".translate"), m.actionTranslate())
 	m.do(m.matchInstagramURL(), m.actionSendInstagramContent())
