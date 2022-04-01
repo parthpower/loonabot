@@ -68,7 +68,7 @@ func (l *Loona) handler(msg *gateway.MessageCreateEvent) {
 	m.do(m.matchSimpleRegex("haseul"), m.actionSendFileMsg("haseul omma", static.Haseul))
 	m.do(m.matchSimpleRegex("hyunjin"), m.actionSendFileMsg("i am little meow meow", static.ImCat))
 	m.do(m.matchSimpleRegex("kim lip"), m.actionSendFileMsg("KIMBERLY LIPPINGTON!", static.KimLip))
-	m.do(m.matchSimpleRegex("i love loona"), m.actionSendMsgNoTTS("https://www.youtube.com/watch?v=xdvzjQzLYE0"))
+	m.do(m.matchSimpleRegex("i love loona"), m.actionSendMsgNoTTS("https://www.youtube.com/watch?v=6SPqouQ8PLo"))
 	m.do(m.matchSimpleRegex("i .+ love loona"), m.actionSendMsgNoTTS("https://www.youtube.com/watch?v=Jw_7hfGpYbo"))
 	m.do(m.matchSimpleRegex("apple"), m.actionSendMsg("fuck apple"))
 	m.do(m.matchSimpleRegex("apple"), m.actionSendMsgNoTTS("https://gfycat.com/bowedmammothcrocodile"))
