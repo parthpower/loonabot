@@ -74,6 +74,7 @@ func (l *Loona) handler(msg *gateway.MessageCreateEvent) {
 	m.do(m.matchSimpleRegex("apple"), m.actionSendMsgNoTTS("https://gfycat.com/bowedmammothcrocodile"))
 	m.do(m.matchSimpleRegex("chuu"), m.actionSendMsg("ten knee sue "))
 	m.do(m.matchSimpleRegex("chuu"), m.actionSendMsgNoTTS("https://gfycat.com/honestweirddromaeosaur"))
+	m.do(m.matchSimpleRegex("betrayed"), m.actionSendMsgNoTTS("https://cdn.discordapp.com/attachments/966033646643474572/966040843435794462/LOONA_Heejin_crying_scene.gif"))
 	m.do(m.matchSimpleRegex("heejin"), m.actionSendFileMsg("jay map elle heejin", static.Heejin))
 	m.do(m.matchSimpleRegex("aeong"), m.actionSendMsg("aeong"))
 	m.do(m.matchSimpleRegex("aeong"), m.actionSendMsgNoTTS("https://gfycat.com/innocentsphericalarrowworm"))
